@@ -36,28 +36,52 @@ function App() {
 
     /* INSTRUCTION: Create functions to handle search change */
 
-    const handleTypeChange = async (newType) => {
-      if(newType.target.value != "All Types"){
-        const response = await fetch(`http://localhost:3000/pokemons?type=${newType.target.value}`)
-        const data = await response.json()
-        setPokemon(data)
-      }else{
-        const response1 = await fetch('http://localhost:3000/pokemons')
-        const data1 = await response1.json()
-        setPokemon(data1)
-      }
-    }
-    const handleSearchChange = async (newSearch) => {
-      if(newSearch.target.value){
-        const response = await fetch(`http://localhost:3000/pokemons?search=${newSearch.target.value}`)
-        const data = await response.json()
-        setPokemon(data)
-      }else{
-        const response1 = await fetch('http://localhost:3000/pokemons')
-        const data1 = await response1.json()
-        setPokemon(data1)
-      }
-    }
+    // const handleTypeChange = async (newType) => {
+    //   if(newType.target.value != "All Types"){
+    //     const response = await fetch(`http://localhost:3000/pokemons?type=${newType.target.value}`)
+    //     const data = await response.json()
+    //     setPokemon(data)
+    //   }else{
+    //     const response1 = await fetch('http://localhost:3000/pokemons')
+    //     const data1 = await response1.json()
+    //     setPokemon(data1)
+    //   }
+    // }
+    // const handleSearchChange = async (newSearch) => {
+    //   if(newSearch.target.value){
+    //     const response = await fetch(`http://localhost:3000/pokemons?search=${newSearch.target.value}`)
+    //     const data = await response.json()
+    //     setPokemon(data)
+    //   }else{
+    //     const response1 = await fetch('http://localhost:3000/pokemons')
+    //     const data1 = await response1.json()
+    //     setPokemon(data1)
+    //   }
+    // }
+    const handleSearchChange = (e) => {
+      setSearch(e.target.value);
+    };
+
+    const handleTypeChange = (e) => {
+      setType(e.target.value);
+    };
+
+    useEffect(() => {
+      const fetchPokemons = async () => {
+        let query = [];
+
+        if (search) query.push(`search=${search}`);
+        if (type && type !== "All Types") query.push(`type=${type}`);
+
+        const queryString = query.length ? `?${query.join("&")}` : "";
+
+        const response = await fetch(`http://localhost:3000/pokemons${queryString}`);
+        const data = await response.json();
+        setPokemon(data);
+      };
+
+      fetchPokemons();
+    }, [search, type]);
 
     return (
         <div className="app">
